@@ -124,15 +124,10 @@ test('purchase with login', async ({ page }) => {
     await expect(page.locator('tfoot')).toContainText('0.008 ₿');
     await page.getByRole('button', { name: 'Pay now' }).click();
 
-     // Check balance
+    // Check balance
     await expect(page.getByText('0.008')).toBeVisible();
-    //order more
-    //await page.getByRole('button', { name: 'Order more' }).click();
-    //go back and verify
-    await page.goto('http://localhost:5173/delivery');
-     await page.getByRole('button', { name: 'Verify' }).click();
-     await page.getByRole('button', { name: 'Close' }).click();
-     await page.getByRole('button', { name: 'Order more' }).click();
+    await page.getByRole('button', { name: 'Verify' }).click();
+    await page.getByRole('button', { name: 'Close' }).click();
 
 
     //cancel after trying to order
@@ -149,8 +144,25 @@ test('purchase with login', async ({ page }) => {
     await expect(page.locator('tfoot')).toContainText('0.008 ₿');
     await page.getByRole('button', { name: 'Cancel' }).click();
   
- 
+  
 
+      //cancel after trying to order
+      await page.goto('/');
+      await page.getByRole('link', { name: 'Order' }).click();
+      await page.getByRole('combobox').selectOption('4');
+      await page.getByRole('link', { name: 'Image Description Veggie A' }).click();
+      await page.getByRole('link', { name: 'Image Description Pepperoni' }).click();
+      await expect(page.locator('form')).toContainText('Selected pizzas: 2');
+      await page.getByRole('button', { name: 'Checkout' }).click();
+  
+      //order more
+      await expect(page.getByRole('main')).toContainText('Send me those 2 pizzas right now!');
+      await expect(page.locator('tbody')).toContainText('Veggie');
+      await expect(page.locator('tbody')).toContainText('Pepperoni');
+      await expect(page.locator('tfoot')).toContainText('0.008 ₿');
+      await page.getByRole('button', { name: 'Pay now' }).click();
+      await page.getByRole('button', { name: 'Order more' }).click();
+     
 
     //logout
      await page.getByRole('link', { name: 'Logout' }).click();
