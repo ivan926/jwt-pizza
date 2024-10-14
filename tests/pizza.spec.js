@@ -131,6 +131,7 @@ test('purchase with login', async ({ page }) => {
 
 
     //cancel after trying to order
+    await page.goto('/');
     await page.getByRole('link', { name: 'Order' }).click();
     await page.getByRole('combobox').selectOption('4');
     await page.getByRole('link', { name: 'Image Description Veggie A' }).click();
