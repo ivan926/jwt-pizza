@@ -146,7 +146,7 @@ test('purchase with login', async ({ page }) => {
   
   
 
-      //cancel after trying to order
+      //order more
       await page.goto('/');
       await page.getByRole('link', { name: 'Order' }).click();
       await page.getByRole('combobox').selectOption('4');
@@ -155,7 +155,6 @@ test('purchase with login', async ({ page }) => {
       await expect(page.locator('form')).toContainText('Selected pizzas: 2');
       await page.getByRole('button', { name: 'Checkout' }).click();
   
-      //order more
       await expect(page.getByRole('main')).toContainText('Send me those 2 pizzas right now!');
       await expect(page.locator('tbody')).toContainText('Veggie');
       await expect(page.locator('tbody')).toContainText('Pepperoni');
@@ -214,9 +213,10 @@ test('purchase with login', async ({ page }) => {
     await page.getByLabel('Global').getByRole('img').click();
 
 
-     //logout
-
-
+    //docs for github
+    await page.goto('/docs');
+     
+    //logout
     await page.getByRole('link', { name: 'Logout' });
   
 
@@ -404,8 +404,8 @@ test('purchase with login', async ({ page }) => {
       await page.getByRole('button', { name: 'Close' }).click();
 
       
-
-
+      //docs for github
+      await page.goto('/docs');
 
           //logout
       await page.getByRole('link', { name: 'Logout' }).click();
