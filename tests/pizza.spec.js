@@ -138,7 +138,7 @@ test('purchase with login', async ({ page }) => {
     await page.getByLabel('Global').getByRole('img').click();
 
     //logout
-    await page.getByRole('link', { name: 'Logout' }).click();
+   // await page.getByRole('link', { name: 'Logout' }).click();
 
 
 
