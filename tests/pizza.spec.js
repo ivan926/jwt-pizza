@@ -9,6 +9,9 @@ test('home page and docs', async ({ page }) => {
 
   await page.goto('/documents');
 
+  await page.goto('/');
+  await page.getByRole('link', { name: 'home' }).click();
+  await page.getByRole('link', { name: 'About' }).click();
 
   
 });
@@ -124,12 +127,19 @@ test('purchase with login', async ({ page }) => {
     await page.getByPlaceholder('Password').click();
     await page.getByPlaceholder('Password').fill('123');
     await page.getByRole('button', { name: 'Register' }).click();
-   
+
+    //click onprofile
+    await page.getByRole('link', { name: 'I', exact: true }).click();
+    await page.getByRole('img', { name: 'Employee stock photo' }).click();
+
+    await expect(page.getByRole('main')).toContainText('A@a.com');
+    await expect(page.getByRole('main')).toContainText('Ivan');
     await page.getByText('JWT Pizza', { exact: true }).click();
     await page.getByLabel('Global').getByRole('img').click();
-    await page.getByRole('link', { name: 'home' }).click();
-    await page.getByRole('link', { name: 'About' }).click();
+
+    //logout
     await page.getByRole('link', { name: 'Logout' }).click();
+
 
 
   })
@@ -273,8 +283,7 @@ test('purchase with login', async ({ page }) => {
         {
 
             const franchiseRes = 
-            {"id":134,"franchiseId":177,"name":"aS"}
-            ;
+            {"id":134,"franchiseId":177,"name":"aS"};
              expect(route.request().method()).toBe('POST');
             await route.fulfill({ json: franchiseRes });
 
@@ -292,8 +301,8 @@ test('purchase with login', async ({ page }) => {
       await page.getByPlaceholder('store name').click();
       await page.getByPlaceholder('store name').fill('new store');
       await page.getByRole('button', { name: 'Create' }).click();
-    //  await page.getByRole('button', { name: 'Close' }).click();
-    //  await page.getByRole('button', { name: 'Close' }).click();
+      await page.getByRole('button', { name: 'Close' }).click();
+
 
 
     
