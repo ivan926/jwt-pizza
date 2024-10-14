@@ -161,7 +161,8 @@ test('purchase with login', async ({ page }) => {
       await expect(page.locator('tfoot')).toContainText('0.008 ₿');
       await page.getByRole('button', { name: 'Pay now' }).click();
       await page.getByRole('button', { name: 'Order more' }).click();
-     
+
+
 
     //logout
      await page.getByRole('link', { name: 'Logout' }).click();
