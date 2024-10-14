@@ -98,6 +98,9 @@ test('purchase with login', async ({ page }) => {
     await page.getByPlaceholder('Email address').press('Tab');
     await page.getByPlaceholder('Password').fill('a');
     await page.getByRole('button', { name: 'Login' }).click();
+
+   
+
   
     // Pay
     await expect(page.getByRole('main')).toContainText('Send me those 2 pizzas right now!');
@@ -108,6 +111,7 @@ test('purchase with login', async ({ page }) => {
   
     // Check balance
     await expect(page.getByText('0.008')).toBeVisible();
+
 
    
 
@@ -128,13 +132,6 @@ test('purchase with login', async ({ page }) => {
     await page.getByPlaceholder('Password').fill('123');
     await page.getByRole('button', { name: 'Register' }).click();
 
-    //click onprofile
-    // await page.getByRole('link', { name: 'I', exact: true }).click();
-    // await page.getByRole('img', { name: 'Employee stock photo' }).click();
-
-    // await expect(page.getByRole('main')).toContainText('A@a.com');
-    // await expect(page.getByRole('main')).toContainText('Ivan');
-
 
     await page.getByText('JWT Pizza', { exact: true }).click();
     await page.getByLabel('Global').getByRole('img').click();
@@ -145,36 +142,7 @@ test('purchase with login', async ({ page }) => {
 
   })
 
-  test("Click on profile photo",async ({ page }) => {
-
-    await page.goto('http://localhost:5173/');
-  await page.getByRole('link', { name: 'Register' }).click();
-  await page.getByPlaceholder('Full name').click();
-  await page.getByPlaceholder('Full name').fill('navis');
-  await page.getByPlaceholder('Email address').click();
-  await page.getByPlaceholder('Email address').fill('nana@a.com');
-  await page.getByPlaceholder('Email address').press('Tab');
-  await page.getByPlaceholder('Password').fill('1234');
-  await page.getByRole('button', { name: 'Register' }).click();
-  await page.getByRole('link', { name: 'n', exact: true }).click();
-  await expect(page.getByRole('main')).toContainText('navis');
-  await expect(page.getByRole('main')).toContainText('nana@a.com');
-
-    //click onprofile
-    // await page.getByRole('link', { name: 'I', exact: true }).click();
-    // await page.getByRole('img', { name: 'Employee stock photo' }).click();
-
-    // await expect(page.getByRole('main')).toContainText('A@a.com');
-    // await expect(page.getByRole('main')).toContainText('Ivan');
-
-
-   
-
-
-
-
-
-  })
+ 
 
 
 
@@ -273,10 +241,14 @@ test('purchase with login', async ({ page }) => {
       await page.getByRole('row', { name: 'test admin Close' }).getByRole('button').click();
       await page.getByRole('button', { name: 'Close' }).click();
 
-     // await expect(page.getByLabel('Global')).toContainText('Adams');
-     // await page.getByRole('link', { name: 'Adams', exact: true }).click();
+      //click on profile
+     await expect(page.getByLabel('Global')).toContainText('A');
+     await page.getByRole('link', { name: 'A', exact: true }).click();
 
+    await page.getByRole('img', { name: 'Employee stock photo' }).click();
 
+    await expect(page.getByRole('main')).toContainText('admin@jwt.com');
+    await expect(page.getByRole('main')).toContainText('Adams');
     
      //closing store within franchise
      await page.getByRole('link', { name: 'Admin', exact: true }).click();
