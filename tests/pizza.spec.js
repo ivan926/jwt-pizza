@@ -6,6 +6,11 @@ test('home page and docs', async ({ page }) => {
   expect(await page.title()).toBe('JWT Pizza');
 
   await page.goto('/docs');
+
+  await page.goto('/documents');
+
+
+  
 });
 
 
@@ -139,7 +144,7 @@ test('purchase with login', async ({ page }) => {
 
     await page.route('*/**/api/auth', async (route) => {
         const loginReq = { email: 'admin@jwt.com', password: 'admin' };
-        const loginRes = { user: { id: 4, name: 'Admin admin', email: 'admin@jwt.com', roles: [{ role: 'admin' }] }, token: 'ratata' };
+        const loginRes = { user: { id: 4, name: 'Adams', email: 'admin@jwt.com', roles: [{ role: 'admin' }] }, token: 'ratata' };
         expect(route.request().method()).toBe('PUT');
         expect(route.request().postDataJSON()).toMatchObject(loginReq);
         await route.fulfill({ json: loginRes });
@@ -149,6 +154,8 @@ test('purchase with login', async ({ page }) => {
 
       await page.route('*/**/api/franchise', async (route) => {
         const method = route.request().method();
+
+    
 
         if(method == 'GET'){
        
@@ -215,13 +222,85 @@ test('purchase with login', async ({ page }) => {
       await page.getByRole('row', { name: 'test admin Close' }).getByRole('button').click();
       await page.getByRole('button', { name: 'Close' }).click();
 
-      await page.getByRole('link', { name: 'Admin', exact: true }).click();
+     // await expect(page.getByLabel('Global')).toContainText('Adams');
+     // await page.getByRole('link', { name: 'Adams', exact: true }).click();
 
-   
-    //closing store within franchise
+
+    
+     //closing store within franchise
+     await page.getByRole('link', { name: 'Admin', exact: true }).click();
+  
      await page.locator('.bg-neutral-100 > .px-6 > .px-2').click();
      await page.getByRole('button', { name: 'Close' }).click();
 
+     //checking history
+     await page.getByRole('link', { name: 'History' }).click();
+     await page.getByRole('link', { name: 'About' }).click();
+     await page.getByRole('link', { name: 'Franchise' }).click();
+     await page.getByRole('link', { name: 'login' }).click();
+     await page.getByPlaceholder('Email address').click();
+     await page.getByPlaceholder('Email address').fill('admin@jwt.com');
+     await page.getByPlaceholder('Password').click();
+     await page.getByPlaceholder('Password').fill('admin');
+     await page.getByRole('button', { name: 'Login' }).click();
+
+      //posiiton of this end point is important
+     await page.route('*/**/api/franchise/**', async (route) => {
+        const method = route.request().method();
+        console.log(route.request().url());
+
+
+        if(method == 'GET'){
+        const franchiseRes = [
+            {
+                "id": 2,
+                "name": "test",
+                "admins": [
+                    {
+                        "id": 4,
+                        "name": "admin",
+                        "email": "admin@jwt.com"
+                    }
+                ],
+                "stores": [{
+                    "id": 4,
+                    "name": "SLC",
+                    "totalRevenue": 0
+                  }]
+            },
+        ];
+         expect(route.request().method()).toBe('GET');
+        await route.fulfill({ json: franchiseRes });
+        }
+        else if (method == 'POST')
+        {
+
+            const franchiseRes = 
+            {"id":134,"franchiseId":177,"name":"aS"}
+            ;
+             expect(route.request().method()).toBe('POST');
+            await route.fulfill({ json: franchiseRes });
+
+        }
+
+       
+
+
+      });
+
+   
+
+
+      await page.getByRole('button', { name: 'Create store' }).click();
+      await page.getByPlaceholder('store name').click();
+      await page.getByPlaceholder('store name').fill('new store');
+      await page.getByRole('button', { name: 'Create' }).click();
+    //  await page.getByRole('button', { name: 'Close' }).click();
+    //  await page.getByRole('button', { name: 'Close' }).click();
+
+
+    
+    
  
   })
 
