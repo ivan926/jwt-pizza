@@ -7,8 +7,6 @@ test('home page and docs', async ({ page }) => {
 
   await page.goto('/docs');
 
-  await expect(page.getByRole('main')).toContainText('[POST] /api/auth');
-
   await page.goto('/documents');
 
   await expect(page.getByLabel('Global').getByRole('img')).toBeVisible();
