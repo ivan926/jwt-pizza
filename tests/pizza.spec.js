@@ -323,6 +323,18 @@ test('purchase with login', async ({ page }) => {
       await page.getByRole('button', { name: 'Create' }).click();
 
       await page.getByRole('row', { name: 'test admin Close' }).getByRole('button').click();
+      await page.getByRole('button', { name: 'Cancel' }).click();
+
+      //create franchise
+     
+      await page.getByRole('button', { name: 'Add Franchise' }).click();
+      await page.getByPlaceholder('franchise name').click();
+      await page.getByPlaceholder('franchise name').fill('def');
+      await page.getByPlaceholder('franchisee admin email').click();
+      await page.getByPlaceholder('franchisee admin email').fill('admin@jwt.com');
+      await page.getByRole('button', { name: 'Create' }).click();
+
+      await page.getByRole('row', { name: 'test admin Close' }).getByRole('button').click();
       await page.getByRole('button', { name: 'Close' }).click();
 
       //click on profile
@@ -334,11 +346,13 @@ test('purchase with login', async ({ page }) => {
     await expect(page.getByRole('main')).toContainText('admin@jwt.com');
     await expect(page.getByRole('main')).toContainText('Adams');
     
-     //closing store within franchise
+     //closing store within franchise but cancelling and then closing
      await page.getByRole('link', { name: 'Admin', exact: true }).click();
-  
      await page.locator('.bg-neutral-100 > .px-6 > .px-2').click();
-     await page.getByRole('button', { name: 'Close' }).click();
+     await page.getByRole('button', { name: 'Cancel' }).click();
+    await page.locator('.bg-neutral-100 > .px-6 > .px-2').click();
+    await page.getByRole('button', { name: 'Close' }).click();
+
 
      //checking history
      await page.getByRole('link', { name: 'History' }).click();
