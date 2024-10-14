@@ -7,7 +7,11 @@ test('home page and docs', async ({ page }) => {
 
   await page.goto('/docs');
 
+  await expect(page.getByRole('main')).toContainText('[POST] /api/auth');
+
   await page.goto('/documents');
+
+  await expect(page.getByLabel('Global').getByRole('img')).toBeVisible();
 
   await page.goto('/');
   await page.getByRole('link', { name: 'home' }).click();
@@ -46,11 +50,24 @@ test('purchase with login', async ({ page }) => {
     });
   
     await page.route('*/**/api/auth', async (route) => {
+        const method = route.request().method();
+
+        if (method == "PUT"){
+
       const loginReq = { email: 'd@jwt.com', password: 'a' };
       const loginRes = { user: { id: 3, name: 'Kai Chen', email: 'd@jwt.com', roles: [{ role: 'diner' }] }, token: 'abcdef' };
       expect(route.request().method()).toBe('PUT');
       expect(route.request().postDataJSON()).toMatchObject(loginReq);
       await route.fulfill({ json: loginRes });
+
+    }
+    else if(method == "DELETE")
+    {
+        const loginRes = {"message":"logout successful"};
+        expect(route.request().method()).toBe('DELETE');
+   
+        await route.fulfill({ json: loginRes });
+    }
     });
   
     await page.route('*/**/api/order', async (route) => {
@@ -108,18 +125,68 @@ test('purchase with login', async ({ page }) => {
     await expect(page.locator('tbody')).toContainText('Pepperoni');
     await expect(page.locator('tfoot')).toContainText('0.008 ₿');
     await page.getByRole('button', { name: 'Pay now' }).click();
-  
-    // Check balance
+
+     // Check balance
     await expect(page.getByText('0.008')).toBeVisible();
+    //order more
+    //await page.getByRole('button', { name: 'Order more' }).click();
+    //go back and verify
+    await page.goto('http://localhost:5173/delivery');
+     await page.getByRole('button', { name: 'Verify' }).click();
+     await page.getByRole('button', { name: 'Close' }).click();
+     await page.getByRole('button', { name: 'Order more' }).click();
 
 
-   
+    //cancel after trying to order
+    await page.getByRole('link', { name: 'Order' }).click();
+    await page.getByRole('combobox').selectOption('4');
+    await page.getByRole('link', { name: 'Image Description Veggie A' }).click();
+    await page.getByRole('link', { name: 'Image Description Pepperoni' }).click();
+    await expect(page.locator('form')).toContainText('Selected pizzas: 2');
+    await page.getByRole('button', { name: 'Checkout' }).click();
+
+    await expect(page.getByRole('main')).toContainText('Send me those 2 pizzas right now!');
+    await expect(page.locator('tbody')).toContainText('Veggie');
+    await expect(page.locator('tbody')).toContainText('Pepperoni');
+    await expect(page.locator('tfoot')).toContainText('0.008 ₿');
+    await page.getByRole('button', { name: 'Cancel' }).click();
+  
+ 
+
+
+    //logout
+     await page.getByRole('link', { name: 'Logout' }).click();
+
+
+
+    
 
   
   });
 
 
   test("Register",async ({ page }) => {
+
+    await page.route('*/**/api/auth', async (route) => {
+        const method = route.request().method();
+
+        if (method == "PUT"){
+
+      const loginReq = { email: 'd@jwt.com', password: 'a' };
+      const loginRes = { user: { id: 3, name: 'Kai Chen', email: 'd@jwt.com', roles: [{ role: 'diner' }] }, token: 'abcdef' };
+      expect(route.request().method()).toBe('PUT');
+      expect(route.request().postDataJSON()).toMatchObject(loginReq);
+      await route.fulfill({ json: loginRes });
+
+    }
+    else if(method == "DELETE")
+    {
+        const loginRes = {"message":"logout successful"};
+        expect(route.request().method()).toBe('DELETE');
+        await route.fulfill({ json: loginRes });
+
+    }
+    });
 
     await page.goto('http://localhost:5173/');
 
@@ -137,8 +204,11 @@ test('purchase with login', async ({ page }) => {
     await page.getByLabel('Global').getByRole('img').click();
 
 
+     //logout
 
 
+    await page.getByRole('link', { name: 'Logout' });
+  
 
   })
 
@@ -164,6 +234,10 @@ test('purchase with login', async ({ page }) => {
         else if(method == "DELETE")
         {
 
+            const loginRes = {"message":"logout successful"};
+            expect(route.request().method()).toBe('DELETE');
+        
+            await route.fulfill({ json: loginRes });
         }
 
 
