@@ -137,8 +137,7 @@ test('purchase with login', async ({ page }) => {
     await page.getByText('JWT Pizza', { exact: true }).click();
     await page.getByLabel('Global').getByRole('img').click();
 
-    //logout
-   // await page.getByRole('link', { name: 'Logout' }).click();
+
 
 
 
@@ -150,11 +149,23 @@ test('purchase with login', async ({ page }) => {
 
 
     await page.route('*/**/api/auth', async (route) => {
+
+        const method = route.request().method();
+
+        if (method == "PUT"){
+
         const loginReq = { email: 'admin@jwt.com', password: 'admin' };
         const loginRes = { user: { id: 4, name: 'Adams', email: 'admin@jwt.com', roles: [{ role: 'admin' }] }, token: 'ratata' };
         expect(route.request().method()).toBe('PUT');
         expect(route.request().postDataJSON()).toMatchObject(loginReq);
         await route.fulfill({ json: loginRes });
+        }
+        else if(method == "DELETE")
+        {
+
+        }
+
+
       });
 
     
@@ -302,6 +313,9 @@ test('purchase with login', async ({ page }) => {
       await page.getByPlaceholder('store name').fill('new store');
       await page.getByRole('button', { name: 'Create' }).click();
       await page.getByRole('button', { name: 'Close' }).click();
+
+          //logout
+      await page.getByRole('link', { name: 'Logout' }).click();
 
 
 
