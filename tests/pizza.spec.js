@@ -451,8 +451,6 @@ test('purchase with login', async ({ page }) => {
 
 
 
-    
-    
  
   })
 
