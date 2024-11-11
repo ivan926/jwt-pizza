@@ -213,7 +213,7 @@ test('purchase with login', async ({ page }) => {
       await route.fulfill({ json: loginRes });
 
     }
-    else if(method == "DELETE")
+    else if(method == "await page.locator('body').click();")
     {
         const loginRes = {"message":"logout successful"};
         expect(route.request().method()).toBe('DELETE');
